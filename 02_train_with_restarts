@@ -1,0 +1,50 @@
+#!/bin/bash
+
+#mb=3072
+#mb=2500
+# вариант 1500 подходит для LSTM размерностями 100+600
+#mb=1500
+mb=1100
+# вариант 1000 подходит для LSTM размерностями 50+1000
+#mb=1000
+
+
+drp0val=0.25
+drp1val=0.45
+drpfval=0.09
+
+echo "DROPS: $drp0val $drp1val $drpfval"
+python3 mlm_training.py new 200 --rnd_dataset --lr 1e-4 --drp0 $drp0val --drp1 $drp1val --drpf $drpfval --batch $mb
+
+for i in {1..7}; do
+  drp0val=$(python -c "print($drp0val-0.025)")
+  drp1val=$(python -c "print($drp1val-0.05)")
+  drpfval=$(python -c "print($drpfval-0.01)")
+  echo "DROPS: $drp0val $drp1val $drpfval"
+  python3 mlm_training.py continue 250 --rnd_dataset --lr 3e-3 --drp0 $drp0val --drp1 $drp1val --drpf $drpfval --batch $mb
+done
+
+for i in {1..2}; do
+  python3 mlm_training.py continue 1500 --rnd_dataset --lr 3e-3 --drp0 0 --drp1 0.1 --drpf 0 --batch $mb
+done
+python3 mlm_training.py continue 14400 --rnd_dataset --lr 4e-3 --drp0 0 --drp1 0.1 --drpf 0 --batch $mb
+#Enc. training loss:                 0.3304 (0.4535 / 0.3153 / 0.2479)   -- февраль 2025
+#Enc. training loss:                 0.3282 (0.4520 / 0.3126 / 0.2457)   -- март 2025
+
+#python3 mlm_training.py continue 7200 --rnd_dataset --lr 3e-3 --drp0 0 --drp1 0.1 --drpf 0 --batch $mb
+
+
+
+
+
+#python3 mlm_training.py continue 1200 --rnd_dataset --lr 2e-3 --drp0 0.1 --drp1 0.05 --drpf 0.05 --batch $mb
+#python3 mlm_training.py continue 600 --rnd_dataset --lr 2e-3 --drp0 0.1 --drp1 0.03 --drpf 0.03 --batch $mb
+#python3 mlm_training.py continue 600 --rnd_dataset --lr 2e-3 --drp0 0.05 --drp1 0.02 --drpf 0.02 --batch $mb
+
+
+#for i in {1..10}; do
+#  python3 mlm_training.py continue 1800 --rnd_dataset --lr 3e-3 --drp0 0.02 --drp1 0.01 --drpf 0 --batch $mb
+#done
+
+
+#python3 mlm_training.py continue 1200 --rnd_dataset --lr 1e-3 --drp0 0 --drp1 0 --drpf 0 --batch $mb

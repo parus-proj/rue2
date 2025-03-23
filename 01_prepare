@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# рекомендуется увеличить BATCH_SIZE в mlm_shared.py, чтобы дробление данных по файлам было не слишком мелким
+
+bzip2 -dkc parus.conll.bz2 | python3 s01_mlm_prepare_data.py
+
+python3 s02_mlm_stat_calc.py
+
+python3 s03_mlm_stat_multisense.py

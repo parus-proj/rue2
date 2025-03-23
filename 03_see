@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# если балансы не обучены
+python3 see_mlm_2.py --oov_percent=0 --near_count=5 --show_lengthes --show_attention --show_balance --balance_cat=1.0 --balance_ass=1.0 --balance_gra=1.0
+#python3 see_mlm_2.py --oov_percent=0 --near_count=5 --show_lengthes --show_balance --balance_cat=1.0 --balance_ass=1.0 --balance_gra=1.0
+
+# если балансы обучены
+#python3 see_mlm_2.py --oov_percent=0 --near_count=5 --show_lengthes --show_attention --show_balance
